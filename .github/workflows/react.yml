@@ -1,0 +1,37 @@
+name: CI/CD for React
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests targeting the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Specify the Node.js version to use
+
+      - name: Install dependencies
+        run: npm install  # Install dependencies from package.json
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Run tests
+        run: npm test -- --coverage
+
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Deploying to production..."
+          # Add your deployment steps here, e.g., using a deploy script or service
